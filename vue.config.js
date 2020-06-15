@@ -1,0 +1,42 @@
+module.exports = {
+  lintOnSave: true,
+  productionSourceMap: false,
+  chainWebpack: (config) => {
+    //忽略的打包文件
+    config.externals({
+      'vue': 'Vue',
+      'vue-router': 'VueRouter',
+      'vuex': 'Vuex',
+      'axios': 'axios',
+      'element-ui': 'ELEMENT',
+    })
+    const entry = config.entry('app')
+    entry
+      .add('babel-polyfill')
+      .end()
+    entry
+      .add('classlist-polyfill')
+      .end()
+    entry
+      .add('@/mock')
+      .end()
+  },
+  devServer: {
+    // 端口配置
+    port: 8082,
+    //打开浏览器
+    open: true,
+    // 反向代理配置
+    proxy: {
+      '/api': {
+        target: 'http://192.168.0.33:8000/',
+        // target: 'http://125.77.116.145:8000/',
+        ws: true,
+        // changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/'
+        }
+      }
+    }
+  }
+}
